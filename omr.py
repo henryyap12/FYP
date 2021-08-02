@@ -25,6 +25,8 @@ def omrmarking(path, csvpath, mark, choice):
             ANSWER_KEY[key] = 4
         elif row[1] is None or row[1] == '':
             ANSWER_KEY[key] = -1
+        elif row[1] == 'bonus' or row[1] == 'Bonus' or row[1] == 'BONUS':
+            ANSWER_KEY[key] = 'bonus'
     question = {key:val for key, val in ANSWER_KEY.items() if val != -1}
     width = 1240
     height = 1748
@@ -125,7 +127,7 @@ def omrmarking(path, csvpath, mark, choice):
 
     correct = 0
     for y in range(len(question)):
-        if ans[y] == question[y]:
+        if ans[y] == question[y] or question[y] == 'bonus' :
             correct += 1
        
     print(correct)
