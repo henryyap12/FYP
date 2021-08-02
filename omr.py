@@ -101,7 +101,10 @@ def omrmarking(path, csvpath, mark, choice):
         filter = (question_num/v) * float(choice)
         filter = sum_of_white/filter
         print(filter)
-        filter = filter*0.85
+        if question_num>40:
+            filter = filter*0.95
+        else:
+            filter = filter*0.75
         detected_ans_num = 0
         for i in ans_list:
             if i in range(min_accept, max_accept):
