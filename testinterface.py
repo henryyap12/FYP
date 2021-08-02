@@ -53,7 +53,7 @@ def getTextInput():
     s = omrmarking(path, csvpath, marks, choice)
     s = round(s,3)
     result = Label(window, bg="#d3d3d3", text=s, fg='green', font=('arial', 20, 'bold'))
-    result.place(x=50, y=620, width=60)
+    result.place(x=50, y=620, width=80)
 
 
 window = build()
