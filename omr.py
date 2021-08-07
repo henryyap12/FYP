@@ -5,6 +5,9 @@ import numpy as np
 import pandas as pd
 from detect import detect
 
+def get_list(x):
+    df = pd.DataFrame(x, dtype=float)
+    df.to_csv('answer.csv',index=False)
 
 def omrmarking(path, csvpath, mark, choice):
     reader = csv.reader(open(csvpath))
@@ -28,13 +31,18 @@ def omrmarking(path, csvpath, mark, choice):
         elif row[1] == 'bonus' or row[1] == 'Bonus' or row[1] == 'BONUS':
             ANSWER_KEY[key] = 'bonus'
     question = {key:val for key, val in ANSWER_KEY.items() if val != -1}
-    width = 1240
-    height = 1748
+    width = 4960
+    height = 7016
     img = cv2.imread(path)
     img = cv2.resize(img, (width, height))
     imggray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-    imgthres = cv2.threshold(imggray, 0, 255, cv2.THRESH_BINARY_INV | cv2.THRESH_OTSU)[1]
-    
+    imgblur = cv2.GaussianBlur(imggray, (5, 5), 1)
+    kernel = np.ones((5, 5), np.uint8)
+    #applying dilate() function on the image to dilate the image and display it as the output on the screen
+    imgthres = cv2.threshold(imgblur, 0, 255, cv2.THRESH_BINARY_INV | cv2.THRESH_OTSU)[1]
+    #imgthres = cv2.dilate(imgthres, kernel)
+    imgthres = cv2.morphologyEx(imgthres, cv2.MORPH_CLOSE, kernel)
+    #4960 x 7016
     savepath = 'C:/Users/Asus/PycharmProjects/PSM/thrs/1.png'
     cv2.imwrite(savepath,imgthres)
 
@@ -62,12 +70,12 @@ def omrmarking(path, csvpath, mark, choice):
 
         if i == 0:
             shape = croped_img.shape
-            print(shape)
+            #print(shape)
             pppp = np.zeros((shape[0] * b, shape[1])).astype('uint8')
             pppp[shape[0] * (i):shape[0] * (i + 1), :] = croped_img
         else:
             croped_img = cv2.resize(croped_img, (shape[1], shape[0]))
-            #cv2.imshow('bine',croped_img)
+            cv2.imshow('bine',croped_img)
             pppp[shape[0] * (i):shape[0] * (i + 1), :] = croped_img
     
     aaa = pppp
@@ -90,21 +98,21 @@ def omrmarking(path, csvpath, mark, choice):
             x = np.sum(aaa[y1:y2, x1:x2])
             option_list.append(x/1000)
         ans_lists.append(option_list)
-    #print(ans_lists)
+    print(ans_lists)
 
     ans = []
     for ans_list in ans_lists:
         m = np.max(ans_list)
-        #print(m)
+        print(m)
         max_accept = int(m * 1.5)
         min_accept = int(m * 0.95)
         sum_of_white = np.sum(ans_lists)
         v = 1 + (1/float(choice))
         filter = (question_num/v) * float(choice)
         filter = sum_of_white/filter
-        #print(filter)
+        print(filter)
         if question_num>=50:
-            filter = filter*0.88
+            filter = filter*0.80
         else:
             filter = filter*0.75
         detected_ans_num = 0
@@ -119,12 +127,12 @@ def omrmarking(path, csvpath, mark, choice):
             else:
                 ans.append(999)
     print(ans)
-
+    
     row = 1
     for a in ans:
         print('question : ', row, 'ans : ', a)
         row += 1
-
+    get_list(ans)
     correct = 0
     for y in range(len(question)):
         if ans[y] == question[y] or question[y] == 'bonus' :
@@ -133,4 +141,4 @@ def omrmarking(path, csvpath, mark, choice):
     print(correct)
     score = (correct / len(question)) * int(mark)
 
-    return score
+    return correct,score

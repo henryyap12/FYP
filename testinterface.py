@@ -50,10 +50,12 @@ def openImg():
 def getTextInput():
     marks = totalmark.get(1.0, tk.END + "-1c")
     choice = totalchoice.get(1.0, tk.END + "-1c")
-    s = omrmarking(path, csvpath, marks, choice)
+    c,s = omrmarking(path, csvpath, marks, choice)
     s = round(s,3)
-    result = Label(window, bg="#d3d3d3", text=s, fg='green', font=('arial', 20, 'bold'))
-    result.place(x=50, y=620, width=80)
+    correct = Label(window, bg="#d3d3d3", text=c, fg='green', font=('arial', 14, 'bold'))
+    correct.place(x=165, y=620, width=50)
+    result = Label(window, bg="#d3d3d3", text=s, fg='green', font=('arial', 14, 'bold'))
+    result.place(x=150, y=580, width=50)
 
 
 window = build()
@@ -81,5 +83,6 @@ totalchoice = tk.Text(window, height=30)
 totalchoice.place(x=50, y=405, width=120, height=20)
 
 resultlabel = Label(window, bg="#d3d3d3", text="Result:", font=('arial', 14, 'bold')).place(x=50, y=580)
+correctlabel = Label(window, bg="#d3d3d3", text="Correct:", font=('arial', 14, 'bold')).place(x=50, y=620)
 
 window.mainloop()
