@@ -106,26 +106,26 @@ def detect(save_img=False):
                 res = []
                 if len(a) < 2:
                     for x in list(a)[0][0:4]:
-                        if list(a)[0][4] > 0.82:
+                        if list(a)[0][4] > 0.8:
                             res.append(x)
 
                 elif len(a) >= 2:
                     for x in list(a):
                         for y in list(x)[0:4]:
-                            if list(x)[4] > 0.82:
+                            if list(x)[4] > 0.8:
                                 res.append(y)
                 get_list(res)
                 #print(res)
 
                 # Write results
-                for *xyxy, conf, cls in reversed(det):
-                    if conf > 0.82:
-                        if save_txt:  # Write to file
-                            xywh = (xyxy2xywh(torch.tensor(xyxy).view(1, 4)) / gn).view(-1).tolist()  # normalized xywh
-                            line = (cls, *xywh, conf) if opt.save_conf else (cls, *xywh)  # label format
-                            print(cls)
-                            with open(txt_path + '.txt', 'a') as f:
-                                f.write(('%g ' * len(line)).rstrip() % line + '\n')
+                #for *xyxy, conf, cls in reversed(det):
+                #    if conf > 0.82:
+                #        if save_txt:  # Write to file
+                #            xywh = (xyxy2xywh(torch.tensor(xyxy).view(1, 4)) / gn).view(-1).tolist()  # normalized xywh
+                #            line = (cls, *xywh, conf) if opt.save_conf else (cls, *xywh)  # label format
+                #            print(cls)
+                #            with open(txt_path + '.txt', 'a') as f:
+                #                f.write(('%g ' * len(line)).rstrip() % line + '\n')
 
             # Stream results
             if view_img:
@@ -133,29 +133,28 @@ def detect(save_img=False):
                 cv2.waitKey(1)  # 1 millisecond
 
             # Save results (image with detections)
-            if save_img:
-                if dataset.mode == 'image':
-                    cv2.imwrite(save_path, im0)
-                else:  # 'video'
-                    if vid_path != save_path:  # new video
-                        vid_path = save_path
-                        if isinstance(vid_writer, cv2.VideoWriter):
-                            vid_writer.release()  # release previous video writer
+            #if save_img:
+            #    if dataset.mode == 'image':
+            #        cv2.imwrite(save_path, im0)
+            #    else:  # 'video'
+            #        if vid_path != save_path:  # new video
+            #            vid_path = save_path
+            #            if isinstance(vid_writer, cv2.VideoWriter):
+            #                vid_writer.release()  # release previous video writer
+#
+ #                       fourcc = 'mp4v'  # output video codec
+  #                      fps = vid_cap.get(cv2.CAP_PROP_FPS)
+   #                     w = int(vid_cap.get(cv2.CAP_PROP_FRAME_WIDTH))
+    #                    h = int(vid_cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
+     #                   vid_writer = cv2.VideoWriter(save_path, cv2.VideoWriter_fourcc(*fourcc), fps, (w, h))
+      #              vid_writer.write(im0)
 
-                        fourcc = 'mp4v'  # output video codec
-                        fps = vid_cap.get(cv2.CAP_PROP_FPS)
-                        w = int(vid_cap.get(cv2.CAP_PROP_FRAME_WIDTH))
-                        h = int(vid_cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
-                        vid_writer = cv2.VideoWriter(save_path, cv2.VideoWriter_fourcc(*fourcc), fps, (w, h))
-                    vid_writer.write(im0)
-
-    if save_txt or save_img:
-        s = f"\n{len(list(save_dir.glob('labels/*.txt')))} labels saved to {save_dir / 'labels'}" if save_txt else ''
+    #if save_txt or save_img:
+        #s = f"\n{len(list(save_dir.glob('labels/*.txt')))} labels saved to {save_dir / 'labels'}" if save_txt else ''
         #print(f"Results saved to {save_dir}{s}")
 
     #print(f'Done. ({time.time() - t0:.3f}s)')
-
-
+    
 def get_list(x):
     n = 4
     x = list(divide_chunks(x, n))
